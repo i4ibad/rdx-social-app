@@ -1,0 +1,602 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quantity Ordered Category Wise</title>
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <!-- ==================== SIDEBAR ==================== -->
+      <aside class="sidebar" id="sidebar">
+    <div class="logo-block">
+      <img class="logo-icon" src="images/logo.svg" alt="Statistic RDX Social Data logo">
+    </div>
+
+    <hr class="logo-divider">
+
+    <nav class="nav-primary">
+      <a href="index.html" class="nav-item ">
+        <span class="nav-icon-badge">%</span>
+        <span class="nav-label">Conversion Rate Summary</span>
+      </a>
+    </nav>
+
+    <div class="nav-section">
+      <div class="nav-section-title">SHOPIFY</div>
+
+      <a href="#" class="nav-item expandable" data-target="submenu-channel">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="12" width="4" height="8" rx="1"/><rect x="10" y="7" width="4" height="13" rx="1"/><rect x="17" y="3" width="4" height="17" rx="1"/></svg>
+        </span>
+        <span class="nav-label">Channel Performance</span>
+        <span class="chevron">&#8964;</span>
+      </a>
+      <div class="submenu " id="submenu-channel">
+        <a href="channel-consolidation.html" class="nav-subitem ">
+          <span class="subnav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h13"/><polyline points="11 6 5 12 11 18"/><path d="M20 6v12"/></svg>
+          </span>
+          <span class="nav-label">Channel Consolidation</span>
+        </a>
+        <a href="reportbase.html" class="nav-subitem ">
+          <span class="subnav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="8" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="16" y2="21"/></svg>
+          </span>
+          <span class="nav-label">Report Base</span>
+        </a>
+        <a href="target.html" class="nav-subitem ">
+          <span class="subnav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 21V4"/><path d="M5 4h13l-3 4 3 4H5"/></svg>
+          </span>
+          <span class="nav-label">Target</span>
+        </a>
+        <a href="finalreport.html" class="nav-subitem ">
+          <span class="subnav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
+          </span>
+          <span class="nav-label">Final Report</span>
+        </a>
+        <a href="marketingcost.html" class="nav-subitem ">
+          <span class="subnav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          </span>
+          <span class="nav-label">Marketing Cost</span>
+        </a>
+      </div>
+
+      <a href="#" class="nav-item expandable" data-target="submenu-product">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l1.5-3h15L21 7"/><path d="M3 7h18v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7z"/><path d="M9 11a3 3 0 0 0 6 0"/></svg>
+        </span>
+        <span class="nav-label">Product Mix</span>
+        <span class="chevron" style="transform:rotate(180deg)">&#8964;</span>
+      </a>
+      <div class="submenu open" id="submenu-product">
+        <a href="quantityordered.html" class="nav-subitem active">
+          <span class="subnav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+          </span>
+          <span class="nav-label">Quantity Ordered– Category Wise</span>
+        </a>
+        <a href="avgsellingprice.html" class="nav-subitem ">
+          <span class="subnav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </span>
+          <span class="nav-label">Average Selling Price</span>
+        </a>
+        <a href="regiongross.html" class="nav-subitem ">
+          <span class="subnav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20"/></svg>
+          </span>
+          <span class="nav-label">Region Wise Gross Sale</span>
+        </a>
+        <a href="grosssale.html" class="nav-subitem ">
+          <span class="subnav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41 12 22l-9-9V4h9l8.59 8.59a2 2 0 0 1 0 2.82Z"/><circle cx="7.5" cy="7.5" r="1.2" fill="currentColor" stroke="none"/></svg>
+          </span>
+          <span class="nav-label">Gross Sales Share</span>
+        </a>
+        <a href="avgitemperorder.html" class="nav-subitem ">
+          <span class="subnav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 5 6H3v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6h-2l-1-4Z"/><path d="M9 10a3 3 0 0 0 6 0"/></svg>
+          </span>
+          <span class="nav-label">Avg Item Per Order</span>
+        </a>
+        <a href="quantityshare.html" class="nav-subitem ">
+          <span class="subnav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2v10l7 4"/></svg>
+          </span>
+          <span class="nav-label">Quantity Share</span>
+        </a>
+      </div>
+
+      <a href="#" class="nav-item expandable" data-target="submenu-coupons">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41 12 22l-9-9V4h9l8.59 8.59a2 2 0 0 1 0 2.82Z"/><circle cx="7.5" cy="7.5" r="1.2" fill="currentColor" stroke="none"/></svg>
+        </span>
+        <span class="nav-label">Coupons</span>
+        <span class="chevron">&#8964;</span>
+      </a>
+      <div class="submenu " id="submenu-coupons">
+        <a href="couponssource.html" class="nav-subitem ">
+          <span class="subnav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41 12 22l-9-9V4h9l8.59 8.59a2 2 0 0 1 0 2.82Z"/><circle cx="7.5" cy="7.5" r="1.2" fill="currentColor" stroke="none"/></svg>
+          </span>
+          <span class="nav-label">Coupons Source</span>
+        </a>
+        <a href="couponbrandcamp.html" class="nav-subitem ">
+          <span class="subnav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41 12 22l-9-9V4h9l8.59 8.59a2 2 0 0 1 0 2.82Z"/><circle cx="7.5" cy="7.5" r="1.2" fill="currentColor" stroke="none"/><line x1="3" y1="3" x2="21" y2="21"/></svg>
+          </span>
+          <span class="nav-label">Coupons Without Brandcamp Cost</span>
+        </a>
+      </div>
+    </div>
+
+<div class="nav-section">
+          <div class="nav-section-title">TRIPLE WHALE</div>
+
+          <a href="#" class="nav-item expandable" data-target="submenu-funnel">
+            <span class="nav-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M22 3 2 10l7 3 3 7 10-17z" />
+              </svg>
+            </span>
+            <span class="nav-label">Conversion Funnel</span>
+            <span class="chevron">&#8964;</span>
+          </a>
+
+          <div class="submenu" id="submenu-funnel">
+            <a href="conversionreport.html" class="nav-subitem">
+              <span class="subnav-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M3 17l6-6 4 4 8-8" />
+                  <path d="M15 7h6v6" />
+                </svg>
+              </span>
+              <span class="nav-label">Report</span>
+            </a>
+
+            <!-- Dashboard: single link, no nesting -->
+            <a
+              href="#"
+              class="nav-subitem expandable"
+              data-target="submenu-funnel-dashboard"
+            >
+              <span class="subnav-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                  <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                  <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                  <rect x="14" y="14" width="7" height="7" rx="1.5" />
+                </svg>
+              </span>
+              <span class="nav-label">Dashboard</span>
+              <span class="chevron">&#8964;</span>
+            </a>
+
+            <!-- Nested submenu: Charts + Data -->
+            <div class="submenu submenu-nested" id="submenu-funnel-dashboard">
+              <a href="dashboardchart.html" class="nav-subitem">
+                <span class="subnav-icon">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <polyline points="3 17 9 11 13 15 21 6" />
+                    <polyline points="14 6 21 6 21 13" />
+                  </svg>
+                </span>
+                <span class="nav-label">Charts</span>
+              </a>
+              <a href="dashboarddata.html" class="nav-subitem">
+                <span class="subnav-icon">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <rect x="3" y="4" width="18" height="16" rx="2" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                    <line x1="9" y1="4" x2="9" y2="20" />
+                  </svg>
+                </span>
+                <span class="nav-label">Data</span>
+              </a>
+            </div>
+          </div>
+
+          <a href="#" class="nav-item">
+            <span class="nav-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M3 17l6-6 4 4 8-8" />
+                <path d="M15 7h6v6" />
+              </svg>
+            </span>
+            <span class="nav-label">Weekly Organic Order</span>
+          </a>
+        </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title">TIKTOK</div>
+
+      <a href="tiktokcampaign.html" class="nav-item">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+        </span>
+        <span class="nav-label">TikTok Compaign</span>
+      </a>
+
+      <a href="tiktopkoverview.html" class="nav-item">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8v8a4 4 0 1 1-4-4"/><path d="M16 8a4 4 0 0 0 4 4V8h-4Z"/><path d="M16 3v5"/></svg>
+        </span>
+        <span class="nav-label">TikTok Overview &amp; Video Data</span>
+      </a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title">META</div>
+
+      <a href="fbdata.html" class="nav-item">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15.5 8.5h-2a2 2 0 0 0-2 2V12H9.5v2.5H11.5V19h2.5v-4.5h2l.5-2.5h-2.5v-1.2c0-.4.3-.8.8-.8h1.7Z" fill="currentColor" stroke="none"/></svg>
+        </span>
+        <span class="nav-label">FB Data</span>
+      </a>
+
+      <a href="instagramposts.html" class="nav-item">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/></svg>
+        </span>
+        <span class="nav-label">Instagram Posts &amp; Stories</span>
+      </a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title">YOUTUBE</div>
+
+      <a href="youtubedata.html" class="nav-item">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="M10.5 9.5v5l4.5-2.5-4.5-2.5Z" fill="currentColor" stroke="none"/></svg>
+        </span>
+        <span class="nav-label">Youtube Data</span>
+      </a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title">KLAVIYO</div>
+
+      <a href="newsletters.html" class="nav-item">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="M3.5 6.5 12 12.5l8.5-6"/></svg>
+        </span>
+        <span class="nav-label">NewsLetters</span>
+      </a>
+    </div>
+
+    <hr class="logo-divider sidebar-footer-divider">
+    <div class="sidebar-footer">© A Solution By <strong>AI Team</strong></div>
+  </aside>
+
+      <!-- ==================== MAIN ==================== -->
+      <div class="main">
+        <!-- top bar -->
+        <header class="topbar">
+          <button
+            class="icon-btn"
+            id="hamburgerBtn"
+            aria-label="Toggle sidebar"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
+
+          <div class="topbar-right">
+            <button
+              class="icon-btn"
+              id="darkModeBtn"
+              aria-label="Toggle dark mode"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" />
+              </svg>
+            </button>
+            <div class="avatar">AP</div>
+          </div>
+        </header>
+
+        <!-- timeframe bar -->
+        <div class="timeframe-bar">
+          <div class="dropdown" id="timeframeDropdown">
+            <button class="dropdown-btn" id="timeframeBtn">
+              <span id="timeframeLabel">Time Frame</span>
+              <svg
+                class="chevron-down"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+            <div class="dropdown-menu" id="timeframeMenu">
+              <div class="dropdown-item" data-value="Today">Today</div>
+              <div class="dropdown-item" data-value="Last 7 Days">
+                Last 7 Days
+              </div>
+              <div class="dropdown-item" data-value="Last 30 Days">
+                Last 30 Days
+              </div>
+              <div class="dropdown-item" data-value="This Month">
+                This Month
+              </div>
+              <div class="dropdown-item" data-value="This Year">This Year</div>
+              <div class="dropdown-item" data-value="Custom">Custom</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- content card -->
+        <div class="content-card">
+          <div class="table-toolbar">
+            <h2 class="table-title">Quantity Ordered-Category Wise</h2>
+            <div class="toolbar-actions">
+              <button class="toolbar-btn">
+                <span class="toolbar-icon">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                    <line x1="9" y1="3" x2="9" y2="21" />
+                    <line x1="15" y1="3" x2="15" y2="21" />
+                  </svg> </span
+                >COLUMNS
+              </button>
+              <button class="toolbar-btn">
+                <span class="toolbar-icon">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <line x1="4" y1="6" x2="20" y2="6" />
+                    <line x1="7" y1="12" x2="17" y2="12" />
+                    <line x1="10" y1="18" x2="14" y2="18" />
+                  </svg> </span
+                >FILTERS
+              </button>
+              <button class="toolbar-btn">
+                <span class="toolbar-icon">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <line x1="3" y1="12" x2="21" y2="12" />
+                    <line x1="3" y1="18" x2="21" y2="18" />
+                  </svg> </span
+                >DENSITY
+              </button>
+              <button class="toolbar-btn" id="exportBtn">
+                <span class="toolbar-icon">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M12 3v12" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <path d="M5 21h14" />
+                  </svg> </span
+                >EXPORT
+              </button>
+              <button
+                class="icon-btn search-toggle"
+                id="searchToggle"
+                aria-label="Search"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <circle cx="11" cy="11" r="7" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="search-row" id="searchRow">
+            <input type="text" id="searchInput" placeholder="Search…" />
+          </div>
+
+          <div class="table-scroll">
+            <table id="dataTable">
+              <thead>
+                <tr>
+                  <th data-key="country">CATEGORY</th>
+                  <th data-key="currency">4/26/2026</th>
+                  <th data-key="currency">4/27/2026</th>
+                  <th data-key="currency">4/28/2026</th>
+                  <th data-key="conversionCurrency">GRAND TOTAL</th>
+                  <th data-key="rate">7 DAYS AVERAGE</th>
+                  <th data-key="startDate">DIFFERENCE</th>
+                  <th data-key="endDate">AVG SELLING PRICE</th>
+                </tr>
+              </thead>
+              <tbody id="tableBody">
+                <tr>
+                  <td>Active Wear</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                </tr>
+                <tr>
+                  <td>Bottoms</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                </tr>
+                <tr>
+                  <td>Weight Lifting Bells</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                </tr>
+                <tr>
+                  <td>MMA Shin Guard</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                </tr>
+                <tr>
+                  <td>Shorts</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                </tr>
+                <tr>
+                  <td>Tank Tops</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                </tr>
+                <tr>
+                  <td>Punchig & Training Bags</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="table-footer">
+            <div class="rows-per-page">
+              <span>Rows per page:</span>
+              <div class="dropdown" id="rowsDropdown">
+                <button class="dropdown-btn small" id="rowsBtn">
+                  <span id="rowsLabel">100</span>
+                  <svg
+                    class="chevron-down"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </button>
+                <div class="dropdown-menu up" id="rowsMenu">
+                  <div class="dropdown-item" data-value="10">10</div>
+                  <div class="dropdown-item" data-value="25">25</div>
+                  <div class="dropdown-item" data-value="50">50</div>
+                  <div class="dropdown-item" data-value="100">100</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="page-info" id="pageInfo">1–6 of 6</div>
+
+            <div class="page-controls">
+              <button class="page-btn" id="prevPage" disabled>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polyline points="15 18 9 12 15 6" />
+                </svg>
+              </button>
+              <button class="page-btn" id="nextPage" disabled>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polyline points="9 18 15 12 9 6" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <script src="script.js"></script>
+</body>
+</html>
