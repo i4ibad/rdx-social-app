@@ -83,9 +83,20 @@ document.getElementById("nextPage")?.addEventListener("click", () => {
   if (state.page < maxPage) { state.page++; renderTable(); }
 });
 
-// ==================== DARK MODE ====================
+// ==================== DARK MODE + LOGO ====================
+const lightLogoSrc = "images/logo.svg";
+const darkLogoSrc = "images/darklogo.svg";
+
+function updateLogos() {
+  const isDark = document.body.classList.contains("dark");
+  document.querySelectorAll(".logo-icon").forEach((img) => {
+    img.src = isDark ? darkLogoSrc : lightLogoSrc;
+  });
+}
+
 document.getElementById("darkModeBtn")?.addEventListener("click", () => {
   document.body.classList.toggle("dark");
+  updateLogos();
 });
 
 // ==================== SIDEBAR / HAMBURGER ====================
@@ -114,29 +125,4 @@ document.querySelectorAll(".nav-item.expandable, .nav-subitem.expandable").forEa
 
 document.querySelectorAll(".submenu, .submenu-nested").forEach(menu => {
   menu.addEventListener("click", (e) => e.stopPropagation());
-});
-
-// LOGO DARK+ CLOSED
-
-// Grab the toggle button and the logo elements
-const themeToggleBtn = document.getElementById('darkModeBtn');
-const logo = document.getElementById('logo');
-
-// Define the file paths for your logos
-const lightLogoSrc = "images/logo.svg";
-const darkLogoSrc = "images/darklogo.svg";
-
-// Add click event listener to the button
-themeToggleBtn.addEventListener('click', () => {
-    // 1. Toggle the dark-mode class on the body
-    document.body.classList.toggle('dark-mode');
-    
-    // 2. Check if dark mode is now active
-    if (document.body.classList.contains('dark-mode')) {
-        // Change logo to the dark mode variant
-        logo.src = darkLogoSrc;
-    } else {
-        // Revert logo to the light mode variant
-        logo.src = lightLogoSrc;
-    }
 });
