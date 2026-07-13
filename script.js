@@ -11,8 +11,6 @@ function renderTable() {
   console.warn("renderTable() not implemented on this page");
 }
 
-
-
 // ==================== SEARCH ====================
 const searchToggle = document.getElementById("searchToggle");
 const searchRow = document.getElementById("searchRow");
@@ -33,7 +31,7 @@ searchInput?.addEventListener("input", (e) => {
 function setupDropdown(dropdownId, btnId, menuId, onSelect, labelId) {
   const btn = document.getElementById(btnId);
   const menu = document.getElementById(menuId);
-  if (!btn || !menu) return; // <-- skip if not on this page
+  if (!btn || !menu) return; 
 
   btn.addEventListener("click", (e) => {
     e.stopPropagation();
