@@ -12,20 +12,66 @@ function renderTable() {
 }
 
 // ==================== SEARCH ====================
-const searchToggle = document.getElementById("searchToggle");
-const searchRow = document.getElementById("searchRow");
-const searchInput = document.getElementById("searchInput");
 
-searchToggle?.addEventListener("click", () => {
-  searchRow?.classList.toggle("open");
-  if (searchRow?.classList.contains("open")) searchInput?.focus();
+// Delegated search toggle + per-card search handling
+document.addEventListener('click', (e) => {
+  const toggle = e.target.closest('.search-toggle');
+  if (!toggle) return;
+  e.stopPropagation();
+  const card = toggle.closest('.content-card');
+  const row = card?.querySelector('.search-row');
+  const input = row?.querySelector('input');
+  row?.classList.toggle('open');
+  if (row?.classList.contains('open')) input?.focus();
 });
 
-searchInput?.addEventListener("input", (e) => {
-  state.search = e.target.value;
-  state.page = 0;
-  renderTable();
+document.addEventListener('input', (e) => {
+  if (!e.target.matches('.search-row input')) return;
+  const input = e.target;
+  const card = input.closest('.content-card');
+  const term = input.value.trim().toLowerCase();
+  filterTableInCard(card, term);
 });
+
+function filterTableInCard(card, term) {
+  if (!card) return;
+  const tbody = card.querySelector('tbody');
+  if (!tbody) return;
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+  let visibleCount = 0;
+  rows.forEach((tr) => {
+    const text = tr.textContent.replace(/\s+/g, ' ').toLowerCase();
+    const match = !term || text.includes(term);
+    tr.style.display = match ? '' : 'none';
+    if (match) visibleCount++;
+  });
+  const pageInfo = card.querySelector('.page-info');
+  if (pageInfo) {
+    const total = rows.length;
+    pageInfo.textContent = visibleCount ? `1–${visibleCount} of ${visibleCount}` : `0–0 of ${total}`;
+  }
+}
+
+// ==================== EXPORT HANDLER ====================
+function exportCardTable(card) {
+  if (!card) return;
+  const table = card.querySelector('table');
+  if (!table) return alert('No table found to export');
+  const headers = Array.from(table.querySelectorAll('thead th')).map(h => h.textContent.trim());
+  const rows = Array.from(table.querySelectorAll('tbody tr')).filter(tr => tr.style.display !== 'none');
+  const csv = [headers.map(h=>`"${h.replace(/"/g,'""')}"`).join(',')];
+  rows.forEach(tr => {
+    const cells = Array.from(tr.querySelectorAll('td'));
+    const row = cells.map(td => `"${(td.textContent||'').trim().replace(/"/g,'""')}"`).join(',');
+    csv.push(row);
+  });
+  const blob = new Blob([csv.join('\n')], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (card.querySelector('.table-title')?.textContent || 'table') + '.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
 
 // ==================== GENERIC DROPDOWN HANDLING ====================
 function setupDropdown(dropdownId, btnId, menuId, onSelect, labelId) {
@@ -123,4 +169,13 @@ document.querySelectorAll(".nav-item.expandable, .nav-subitem.expandable").forEa
 
 document.querySelectorAll(".submenu, .submenu-nested").forEach(menu => {
   menu.addEventListener("click", (e) => e.stopPropagation());
+});
+
+// Export button delegation
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('#exportBtn');
+  if (!btn) return;
+  e.stopPropagation();
+  const card = btn.closest('.content-card');
+  exportCardTable(card);
 });
