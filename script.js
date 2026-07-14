@@ -13,7 +13,6 @@ function renderTable() {
 
 // ==================== SEARCH ====================
 
-// Delegated search toggle + per-card search handling
 document.addEventListener('click', (e) => {
   const toggle = e.target.closest('.search-toggle');
   if (!toggle) return;
@@ -179,3 +178,105 @@ document.addEventListener('click', (e) => {
   const card = btn.closest('.content-card');
   exportCardTable(card);
 });
+
+
+(function () {
+  const table = document.getElementById('dataTable');
+  const headerCells = Array.from(table.querySelectorAll('thead th'));
+  const optionsList = document.getElementById('columnOptionsList');
+  const columnsBtn = document.getElementById('columnsBtn');
+  const columnsMenu = document.getElementById('columnsMenu');
+  const resetBtn = document.getElementById('resetColumnsBtn');
+
+  const columns = headerCells.map((th, index) => ({
+    key: th.dataset.key,
+    label: th.textContent.trim(),
+    index: index
+  }));
+
+  const visible = {};
+  columns.forEach(col => { visible[col.key] = true; });
+
+  function buildOptionsList() {
+    optionsList.innerHTML = '';
+    columns.forEach(col => {
+      const row = document.createElement('label');
+      row.className = 'column-option';
+      row.dataset.key = col.key;
+
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.checked = visible[col.key];
+      checkbox.addEventListener('change', () => toggleColumn(col.key, checkbox.checked, checkbox));
+
+      const text = document.createElement('span');
+      text.textContent = col.label;
+
+      row.appendChild(checkbox);
+      row.appendChild(text);
+      optionsList.appendChild(row);
+    });
+  }
+
+  function applyVisibility() {
+    const visibleCount = Object.values(visible).filter(Boolean).length;
+
+    columns.forEach(col => {
+      const isVisible = visible[col.key];
+      headerCells[col.index].classList.toggle('col-hidden', !isVisible);
+
+      table.querySelectorAll('#tableBody tr').forEach(row => {
+        const cell = row.children[col.index];
+        if (cell) cell.classList.toggle('col-hidden', !isVisible);
+      });
+
+      const optionRow = optionsList.querySelector('.column-option[data-key="' + col.key + '"]');
+      if (optionRow) {
+        const cb = optionRow.querySelector('input');
+        const disable = isVisible && visibleCount === 1;
+        optionRow.classList.toggle('disabled', disable);
+        cb.disabled = disable;
+      }
+    });
+
+    const btnActive = Object.values(visible).some(v => !v);
+    columnsBtn.classList.toggle('active', btnActive);
+  }
+
+  function toggleColumn(key, isChecked, checkboxEl) {
+    const currentlyVisible = Object.values(visible).filter(Boolean).length;
+    if (!isChecked && currentlyVisible <= 1) {
+      checkboxEl.checked = true;
+      return;
+    }
+    visible[key] = isChecked;
+    applyVisibility();
+  }
+
+  function resetColumns() {
+    columns.forEach(col => { visible[col.key] = true; });
+    buildOptionsList();
+    applyVisibility();
+  }
+
+  columnsBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    columnsMenu.classList.toggle('open');
+  });
+
+  resetBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    resetColumns();
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!columnsMenu.contains(e.target) && e.target !== columnsBtn) {
+      columnsMenu.classList.remove('open');
+    }
+  });
+
+  columnsMenu.addEventListener('click', (e) => e.stopPropagation());
+
+  buildOptionsList();
+  applyVisibility();
+})();
