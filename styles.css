@@ -1,5 +1,5 @@
 :root{
-  --sidebar-w: 280px;
+  --sidebar-w: 300px;
   --purple: #5b4fe8;
   --purple-light: #eeeaff;
   --purple-badge-bg: #6d5bf5;
@@ -410,6 +410,11 @@ body{
 }
 .dropdown-item:hover{ background: var(--row-hover); }
 
+/* Position wrapper for dropdown */
+.dropdown{
+  position: relative;
+}
+
 /* ==================== CONTENT CARD ==================== */
 .content-card{
   margin: 20px 16px;
@@ -585,6 +590,8 @@ body.dark .chart-card{background: #1a1d38; }
 body.dark .card-title{color: #eceef4;}
 body.dark .line-chart-title{color: #eceef4;}
 body.dark .chart-card-title{color: #eceef4;}
+body.dark .columns-menu{background: #1a1d38; color: #eceef4;}
+body.dark .column-option{color: #eceef4;}
 /* ==================== RESPONSIVE ==================== */
 
 
@@ -941,6 +948,57 @@ body.dark .chart-card-title{color: #eceef4;}
   .line-wrap {
     height: 220px;
   }
+}
+
+/* ==================== DENSITY MODES ==================== */
+
+.density-compact table th,
+.density-compact table td {
+  padding: 8px 12px;
+  font-size: 13px;
+}
+
+.density-compact table {
+  line-height: 1.5;
+}
+
+.density-compact .content-card {
+  padding: 22px 22px 8px;
+}
+
+.density-compact .table-toolbar {
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.density-compact .table-title {
+  font-size: 16px;
+}
+
+/* COMFORTABLE DENSITY */
+.density-comfortable table th,
+.density-comfortable table td {
+  padding: 12px 16px;
+  font-size: 14px;
+}
+
+.density-comfortable table {
+  line-height: 1.8;
+}
+
+.density-comfortable .content-card {
+  padding: 28px 28px 12px;
+}
+
+.density-comfortable .table-toolbar {
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.density-comfortable .table-title {
+  font-size: 18px;
+  font-weight: 700;
+}
 
   .line-chart-wrap {
     height: 240px;
@@ -954,7 +1012,7 @@ body.dark .chart-card-title{color: #eceef4;}
     width: 28px;
     height: 28px;
   }
-}
+
 
 /* ---------- Small phones (≤400px) ---------- */
 @media (max-width: 400px) {

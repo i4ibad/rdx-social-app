@@ -5,6 +5,7 @@ let state = {
   sortDir: 1,
   rowsPerPage: 100,
   page: 0,
+  density: "Standard",
 };
 
 function renderTable() {
@@ -109,11 +110,44 @@ document.addEventListener("click", (e) => {
 });
 
 setupDropdown("timeframeDropdown", "timeframeBtn", "timeframeMenu", null, "timeframeLabel");
+setupDropdown("densityDropdown", "densityBtn", "densityMenu", (value) => {
+  state.density = value;
+  applyDensity(value);
+}, null);
 setupDropdown("rowsDropdown", "rowsBtn", "rowsMenu", (value) => {
   state.rowsPerPage = parseInt(value, 10);
   state.page = 0;
   renderTable();
 }, "rowsLabel");
+
+// ==================== DENSITY HANDLER ====================
+function applyDensity(density) {
+  const tables = document.querySelectorAll("table");
+  const contentCards = document.querySelectorAll(".content-card");
+  
+  // Remove all density classes
+  tables.forEach(table => {
+    table.classList.remove("density-compact", "density-standard", "density-comfortable");
+  });
+  contentCards.forEach(card => {
+    card.classList.remove("density-compact", "density-standard", "density-comfortable");
+  });
+  
+  // Add the new density class
+  const densityClass = `density-${density.toLowerCase()}`;
+  tables.forEach(table => table.classList.add(densityClass));
+  contentCards.forEach(card => card.classList.add(densityClass));
+}
+
+// Initialize default density when page loads
+document.addEventListener("DOMContentLoaded", () => {
+  applyDensity(state.density);
+});
+
+// Also apply density on window load to catch dynamically added elements
+window.addEventListener("load", () => {
+  applyDensity(state.density);
+});
 
 // ==================== PAGINATION ====================
 document.getElementById("prevPage")?.addEventListener("click", () => {

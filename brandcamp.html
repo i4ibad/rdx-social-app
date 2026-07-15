@@ -412,20 +412,7 @@
                   </svg> </span
                 >FILTERS
               </button>
-              <button class="toolbar-btn">
-                <span class="toolbar-icon">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                  >
-                    <line x1="3" y1="6" x2="21" y2="6" />
-                    <line x1="3" y1="12" x2="21" y2="12" />
-                    <line x1="3" y1="18" x2="21" y2="18" />
-                  </svg> </span
-                >DENSITY
-              </button>
+              <div class="dropdown" id="densityDropdown"><button class="toolbar-btn" id="densityBtn"><span class="toolbar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" /></svg> </span>DENSITY</button><div class="dropdown-menu" id="densityMenu"><div class="dropdown-item" data-value="Compact">Compact</div><div class="dropdown-item" data-value="Standard">Standard</div><div class="dropdown-item" data-value="Comfortable">Comfortable</div></div></div>
               <button class="toolbar-btn" id="exportBtn">
                 <span class="toolbar-icon">
                   <svg
@@ -611,3 +598,4 @@
   <script src="script.js"></script>
 </body>
 </html>
+
