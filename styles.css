@@ -565,8 +565,9 @@ tbody tr:last-child td{ border-bottom: none; }
 
 /* ==================== DARK MODE ==================== */
 body.dark{
-  --bg-page: #1a1d38;
-  --bg-card: #1a1d38;
+  --bg-page: #0B1437;
+  --bg-card: #131B3D;
+  --bg-sidebar: #111C44;
   --topbar-bg: #1a1b24;
   --border: #2b2d3a;
   --text-main: #eceef4;
@@ -576,12 +577,12 @@ body.dark{
   --purple-light: #2a2560;
   
 }
-body.dark .logo-title{ color:#fff; }
-body.dark .dropdown-btn{ background:#1c1e28; color:var(--text-main); }
+body.dark .sidebar{ background: var(--bg-sidebar); border-right: 1px solid var(--border); }
+body.dark .dropdown-btn{ background: var(--bg-card); color:var(--text-main); }
 body.dark .dropdown-menu{ background:#1c1e28; }
 body.dark .search-row input{ background:#1c1e28; color:var(--text-main); }
 body.dark .topbar-right{background: #0a0d1a9f;}
-body.dark .timeframe-bar{background: #1a1d38;}
+body.dark .timeframe-bar{background: var(--bg-card);}
 body.dark .nav-label{color: var(--text-main);}
 body.dark .table-title{color: #eceef4;}
 body.dark .card{background: #1a1d38; }
