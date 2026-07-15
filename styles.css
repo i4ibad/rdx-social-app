@@ -579,7 +579,7 @@ body.dark{
 }
 body.dark .sidebar{ background: var(--bg-sidebar); border-right: 1px solid var(--border); }
 body.dark .dropdown-btn{ background: var(--bg-card); color:var(--text-main); }
-body.dark .dropdown-menu{ background:#1c1e28; }
+body.dark .dropdown-menu{ background: var(--bg-card); }
 body.dark .search-row input{ background:#1c1e28; color:var(--text-main); }
 body.dark .topbar-right{background: #0a0d1a9f;}
 body.dark .timeframe-bar{background: var(--bg-card);}
