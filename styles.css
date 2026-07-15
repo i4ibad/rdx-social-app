@@ -581,7 +581,6 @@ body.dark .sidebar{ background: var(--bg-sidebar); border-right: 1px solid var(-
 body.dark .dropdown-btn{ background: var(--bg-card); color:var(--text-main); }
 body.dark .dropdown-menu{ background: var(--bg-card); }
 body.dark .search-row input{ background:#1c1e28; color:var(--text-main); }
-body.dark .topbar-right{background: #0a0d1a9f;}
 body.dark .timeframe-bar{background: var(--bg-card);}
 body.dark .nav-label{color: var(--text-main);}
 body.dark .table-title{color: #eceef4;}
@@ -593,6 +592,7 @@ body.dark .line-chart-title{color: #eceef4;}
 body.dark .chart-card-title{color: #eceef4;}
 body.dark .columns-menu{background: #1a1d38; color: #eceef4;}
 body.dark .column-option{color: #eceef4;}
+body.dark .topbar-right{background: #1B254B;}
 /* ==================== RESPONSIVE ==================== */
 
 
