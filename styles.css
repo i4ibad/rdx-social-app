@@ -2,7 +2,7 @@
   --sidebar-w: 300px;
   --purple: #5b4fe8;
   --purple-light: #eeeaff;
-  --purple-badge-bg: #6d5bf5;
+  --purple-badge-bg: #422AFB;
   --text-main: #1f2430;
   --text-muted: #393b41;
   --text-faint: #9aa1ac;
@@ -23,7 +23,7 @@ body{
   color: var(--text-main);
   font-size: 14px;
   -webkit-font-smoothing: antialiased;
-
+  
 }
 
 .app{
@@ -84,7 +84,7 @@ body{
 }
 .nav-item:hover{ background: var(--row-hover); }
 .nav-item.active{
-  background: var(--purple-light);
+  background: #EDFAF9;
   color: var(--purple);
   font-weight: 700;
 }
@@ -93,8 +93,8 @@ body{
   width: 26px;
   height: 26px;
   min-width: 26px;
-  background: var(--purple-badge-bg);
-  color: #fff;
+  background: #f2f3f7;
+  color: #718096;
   border-radius: 8px;
   display:flex;
   align-items:center;
@@ -168,7 +168,7 @@ body{
 }
 .nav-subitem:hover{ background: var(--row-hover); }
 .nav-subitem.active{
-  background: var(--purple-light);
+  background: #EDFAF9;
   font-weight: 700;
 }
 .nav-subitem .chevron{ margin-left: auto; }
@@ -593,6 +593,11 @@ body.dark .chart-card-title{color: #eceef4;}
 body.dark .columns-menu{background: #1a1d38; color: #eceef4;}
 body.dark .column-option{color: #eceef4;}
 body.dark .topbar-right{background: #1B254B;}
+body.dark .nav-icon{background: #1B254B; color: #eceef4;}
+body.dark .nav-icon-badge{background: #1B254B; color: #eceef4;}
+body.dark .subnav-icon{background: #1B254B; color: #eceef4;}
+body.dark .nav-subitem.active{background: #2a2560;}
+body.dark .nav-item.active{background: #1F294F;}
 /* ==================== RESPONSIVE ==================== */
 
 
