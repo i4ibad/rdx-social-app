@@ -344,34 +344,80 @@
         </header>
 
         <!-- timeframe bar -->
-        <div class="timeframe-bar">
-          <div class="dropdown" id="timeframeDropdown">
-            <button class="dropdown-btn" id="timeframeBtn">
-              <span id="timeframeLabel">Time Frame</span>
-              <svg
-                class="chevron-down"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <polyline points="6 9 12 15 18 9" />
-              </svg>
+        <div class="timeframe-bar" style="justify-content: space-between;">
+          <div class="timeframe-notice">
+            <svg
+              class="timeframe-notice-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"
+              />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+            <span>Incase of any missing value, please contact SEO Team</span>
+          </div>
+
+          <div class="timeframe-actions">
+            <button class="timeframe-btn" id="refreshReportBtn" type="button">
+              <span class="timeframe-btn-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polyline points="23 4 23 10 17 10" />
+                  <polyline points="1 20 1 14 7 14" />
+                  <path
+                    d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"
+                  />
+                </svg>
+              </span>
+              <span>REFRESH REPORT</span>
             </button>
-            <div class="dropdown-menu" id="timeframeMenu">
-              <div class="dropdown-item" data-value="Today">Today</div>
-              <div class="dropdown-item" data-value="Last 7 Days">
-                Last 7 Days
-              </div>
-              <div class="dropdown-item" data-value="Last 30 Days">
-                Last 30 Days
-              </div>
-              <div class="dropdown-item" data-value="This Month">
-                This Month
-              </div>
-              <div class="dropdown-item" data-value="This Year">This Year</div>
-              <div class="dropdown-item" data-value="Custom">Custom</div>
-            </div>
+
+            <button class="timeframe-btn" id="loadReportBtn" type="button">
+              <span class="timeframe-btn-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+              </span>
+              <span>LOAD REPORT</span>
+            </button>
+
+            <button class="timeframe-btn" id="uploadFileBtn" type="button">
+              <span class="timeframe-btn-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="17 8 12 3 7 8" />
+                  <line x1="12" y1="3" x2="12" y2="15" />
+                </svg>
+              </span>
+              <span>UPLOAD FILE</span>
+            </button>
+            <input
+              type="file"
+              id="uploadFileInput"
+              accept=".csv"
+              hidden
+            />
           </div>
         </div>
 

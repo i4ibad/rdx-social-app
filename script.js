@@ -313,4 +313,195 @@ document.addEventListener('click', (e) => {
 
   buildOptionsList();
   applyVisibility();
+
+  // (report upload / load / refresh)
+  
+  window.rdxTableHelpers = window.rdxTableHelpers || {};
+  window.rdxTableHelpers.applyVisibility = applyVisibility;
 })();
+
+// ==================== REFRESH / LOAD / UPLOAD REPORT ====================
+
+function rdxGetReportStorageKey() {
+  const page = (location.pathname.split('/').pop() || 'report').replace(/\.html?$/i, '') || 'report';
+  return 'rdxReportData_' + page;
+}
+
+// Minimal CSV parser: handles quoted fields, escaped quotes ("") and commas inside quotes.
+function rdxParseCSV(text) {
+  const lines = text.split(/\r\n|\n|\r/).filter((l) => l.trim() !== '');
+  return lines.map((line) => {
+    const result = [];
+    let cur = '';
+    let inQuotes = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (inQuotes) {
+        if (ch === '"') {
+          if (line[i + 1] === '"') { cur += '"'; i++; }
+          else inQuotes = false;
+        } else {
+          cur += ch;
+        }
+      } else if (ch === '"') {
+        inQuotes = true;
+      } else if (ch === ',') {
+        result.push(cur);
+        cur = '';
+      } else {
+        cur += ch;
+      }
+    }
+    result.push(cur);
+    return result;
+  });
+}
+
+// Toast feedback for refresh / load / upload actions.
+function rdxShowToast(message, tone) {
+  const toast = document.createElement('div');
+  toast.className = 'rdx-toast' + (tone === 'error' ? ' rdx-toast-error' : ' rdx-toast-success');
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  requestAnimationFrame(() => toast.classList.add('show'));
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 300);
+  }, 2800);
+}
+
+// Rebuilds the visible table body from parsed CSV data rows (header row excluded),
+// padding/truncating each row to match the number of table header columns.
+function rdxRenderReportRows(table, dataRows) {
+  if (!table) return;
+  const tbody = table.querySelector('tbody');
+  const headerCount = table.querySelectorAll('thead th').length || 1;
+  if (!tbody) return;
+
+  tbody.innerHTML = '';
+  dataRows.forEach((cols) => {
+    const tr = document.createElement('tr');
+    for (let i = 0; i < headerCount; i++) {
+      const td = document.createElement('td');
+      td.textContent = cols[i] !== undefined ? cols[i] : '';
+      tr.appendChild(td);
+    }
+    tbody.appendChild(tr);
+  });
+
+  const card = table.closest('.content-card');
+  if (card) {
+    const searchInput = card.querySelector('.search-row input');
+    filterTableInCard(card, (searchInput?.value || '').trim().toLowerCase());
+  }
+
+  window.rdxTableHelpers?.applyVisibility?.();
+  applyDensity(state.density);
+}
+
+function rdxGetActiveReportTable(fromEl) {
+  const card = fromEl?.closest('.content-card') || document.querySelector('.content-card');
+  return card?.querySelector('#dataTable') || document.getElementById('dataTable');
+}
+
+function rdxSetButtonLoading(btn, isLoading) {
+  if (!btn) return;
+  btn.classList.toggle('is-loading', isLoading);
+  btn.disabled = isLoading;
+}
+
+// ---- REFRESH REPORT: re-syncs the table with the last saved report (if any),
+// clears any active search filter, and resets to the first page. ----
+function rdxRefreshReport(btn) {
+  const table = rdxGetActiveReportTable(btn);
+  const card = table?.closest('.content-card');
+  rdxSetButtonLoading(btn, true);
+
+  setTimeout(() => {
+    const saved = localStorage.getItem(rdxGetReportStorageKey());
+    if (saved && table) {
+      const parsed = rdxParseCSV(saved);
+      rdxRenderReportRows(table, parsed.slice(1));
+    }
+
+    const searchInput = card?.querySelector('.search-row input');
+    if (searchInput) searchInput.value = '';
+    if (card) filterTableInCard(card, '');
+
+    state.page = 0;
+    rdxSetButtonLoading(btn, false);
+    rdxShowToast('Report refreshed.');
+  }, 400);
+}
+
+// ---- LOAD REPORT: loads the most recently uploaded/saved report from storage. ----
+function rdxLoadReport(btn) {
+  const table = rdxGetActiveReportTable(btn);
+  const key = rdxGetReportStorageKey();
+  const saved = localStorage.getItem(key);
+
+  if (!saved) {
+    rdxShowToast('No saved report found for this page yet. Please upload a file first.', 'error');
+    return;
+  }
+
+  rdxSetButtonLoading(btn, true);
+  setTimeout(() => {
+    const parsed = rdxParseCSV(saved);
+    rdxRenderReportRows(table, parsed.slice(1));
+    rdxSetButtonLoading(btn, false);
+    rdxShowToast('Report loaded successfully.');
+  }, 300);
+}
+
+// ---- UPLOAD FILE: opens a file picker, reads the CSV, renders it into the table,
+// and stores it so LOAD REPORT / REFRESH REPORT can bring it back later. ----
+function rdxTriggerUpload(btn) {
+  const bar = btn.closest('.timeframe-bar');
+  const input = bar?.querySelector('#uploadFileInput') || document.getElementById('uploadFileInput');
+  input?.click();
+}
+
+function rdxHandleUploadedFile(inputEl) {
+  const file = inputEl.files?.[0];
+  if (!file) return;
+
+  if (!/\.csv$/i.test(file.name)) {
+    rdxShowToast('Please upload a .csv file.', 'error');
+    inputEl.value = '';
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    const text = String(reader.result || '');
+    const parsed = rdxParseCSV(text);
+    if (!parsed.length) {
+      rdxShowToast('The selected file appears to be empty.', 'error');
+      return;
+    }
+    const table = rdxGetActiveReportTable(inputEl);
+    rdxRenderReportRows(table, parsed.slice(1));
+    localStorage.setItem(rdxGetReportStorageKey(), text);
+    rdxShowToast('"' + file.name + '" uploaded and report updated.');
+  };
+  reader.onerror = () => rdxShowToast('Could not read the selected file.', 'error');
+  reader.readAsText(file);
+  inputEl.value = '';
+}
+
+document.addEventListener('click', (e) => {
+  const refreshBtn = e.target.closest('#refreshReportBtn');
+  if (refreshBtn) { e.preventDefault(); rdxRefreshReport(refreshBtn); return; }
+
+  const loadBtn = e.target.closest('#loadReportBtn');
+  if (loadBtn) { e.preventDefault(); rdxLoadReport(loadBtn); return; }
+
+  const uploadBtn = e.target.closest('#uploadFileBtn');
+  if (uploadBtn) { e.preventDefault(); rdxTriggerUpload(uploadBtn); return; }
+});
+
+document.addEventListener('change', (e) => {
+  if (!e.target.matches('#uploadFileInput')) return;
+  rdxHandleUploadedFile(e.target);
+});
