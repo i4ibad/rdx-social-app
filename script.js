@@ -315,7 +315,7 @@ document.addEventListener('click', (e) => {
   applyVisibility();
 
   // (report upload / load / refresh)
-  
+
   window.rdxTableHelpers = window.rdxTableHelpers || {};
   window.rdxTableHelpers.applyVisibility = applyVisibility;
 })();
@@ -370,8 +370,6 @@ function rdxShowToast(message, tone) {
   }, 2800);
 }
 
-// Rebuilds the visible table body from parsed CSV data rows (header row excluded),
-// padding/truncating each row to match the number of table header columns.
 function rdxRenderReportRows(table, dataRows) {
   if (!table) return;
   const tbody = table.querySelector('tbody');
@@ -410,8 +408,7 @@ function rdxSetButtonLoading(btn, isLoading) {
   btn.disabled = isLoading;
 }
 
-// ---- REFRESH REPORT: re-syncs the table with the last saved report (if any),
-// clears any active search filter, and resets to the first page. ----
+// ---- REFRESH REPORT: re-syncs the table with the last saved report
 function rdxRefreshReport(btn) {
   const table = rdxGetActiveReportTable(btn);
   const card = table?.closest('.content-card');
@@ -434,7 +431,7 @@ function rdxRefreshReport(btn) {
   }, 400);
 }
 
-// ---- LOAD REPORT: loads the most recently uploaded/saved report from storage. ----
+// ---- LOAD REPORT: loads the most recently uploaded ----
 function rdxLoadReport(btn) {
   const table = rdxGetActiveReportTable(btn);
   const key = rdxGetReportStorageKey();
@@ -454,8 +451,7 @@ function rdxLoadReport(btn) {
   }, 300);
 }
 
-// ---- UPLOAD FILE: opens a file picker, reads the CSV, renders it into the table,
-// and stores it so LOAD REPORT / REFRESH REPORT can bring it back later. ----
+// ---- UPLOAD FILE
 function rdxTriggerUpload(btn) {
   const bar = btn.closest('.timeframe-bar');
   const input = bar?.querySelector('#uploadFileInput') || document.getElementById('uploadFileInput');

@@ -9,7 +9,7 @@
   --border: #e7e9ee;
   --bg-page: #f3f5fa;
   --bg-card: #ffffff;
-  --link-blue: #007eff;
+  --link-blue: #3299ff;
   --bg-topright: #ffffff;
   --row-hover: #f7f8fc;
   --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -403,7 +403,7 @@ body{
 }
 .timeframe-btn-icon{ display:flex; align-items:center; justify-content:center; }
 .timeframe-btn-icon svg{ width: 16px; height: 16px; }
-.timeframe-btn:hover{ background: var(--link-blue); color:#fff; }
+.timeframe-btn:hover{ background: #ededee; }
 .timeframe-btn:active{ opacity:.85; }
 .timeframe-btn:disabled{ opacity:.55; cursor:not-allowed; }
 .timeframe-btn.is-loading .timeframe-btn-icon svg{ animation: rdx-spin .8s linear infinite; }
