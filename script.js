@@ -320,7 +320,7 @@ document.addEventListener('click', (e) => {
   window.rdxTableHelpers.applyVisibility = applyVisibility;
 })();
 
-// ==================== REFRESH / LOAD / UPLOAD REPORT ====================
+// REFRESH / LOAD / UPLOAD REPORT
 
 function rdxGetReportStorageKey() {
   const page = (location.pathname.split('/').pop() || 'report').replace(/\.html?$/i, '') || 'report';
@@ -427,18 +427,18 @@ function rdxRefreshReport(btn) {
 
     state.page = 0;
     rdxSetButtonLoading(btn, false);
-    rdxShowToast('Report refreshed.');
+    rdxShowToast('Refresh Report initiated');
   }, 400);
 }
 
-// ---- LOAD REPORT: loads the most recently uploaded ----
+// ---- LOAD REPORT ----
 function rdxLoadReport(btn) {
   const table = rdxGetActiveReportTable(btn);
   const key = rdxGetReportStorageKey();
   const saved = localStorage.getItem(key);
 
   if (!saved) {
-    rdxShowToast('No saved report found for this page yet. Please upload a file first.', 'error');
+    rdxShowToast('Load Report initiated');
     return;
   }
 
