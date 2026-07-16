@@ -173,6 +173,7 @@ body{
 }
 .nav-subitem .chevron{ margin-left: auto; }
 
+
 .subnav-icon{
   width: 26px;
   height: 26px;
@@ -185,7 +186,6 @@ body{
   border-radius: 8px;
 }
 .subnav-icon svg{ width: 14px; height: 14px; }
-
 .sidebar-footer-divider{ margin: 20px 0 12px; }
 .sidebar-footer{
   text-align: center;
@@ -1222,7 +1222,6 @@ body.dark .nav-item.active{background: #1F294F;}
 .column-option input[type="checkbox"] {
   width: 15px;
   height: 15px;
-  accent-color: var(--link-blue);
   cursor: pointer;
 }
 .column-option.disabled {
