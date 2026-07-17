@@ -453,6 +453,11 @@ function rdxLoadReport(btn) {
 
 // ---- UPLOAD FILE
 function rdxTriggerUpload(btn) {
+  if (window.rdxOpenUploadModal) {
+    window.rdxOpenUploadModal(btn);
+    return;
+  }
+  // Fallback in case the modal script hasn't loaded
   const bar = btn.closest('.timeframe-bar');
   const input = bar?.querySelector('#uploadFileInput') || document.getElementById('uploadFileInput');
   input?.click();
@@ -501,3 +506,315 @@ document.addEventListener('change', (e) => {
   if (!e.target.matches('#uploadFileInput')) return;
   rdxHandleUploadedFile(e.target);
 });
+// ==================== UPLOAD FILE MODAL ====================
+(function () {
+  const MAX_BYTES = 10 * 1024 * 1024; // 10.00 MB
+  const ACCEPTED = ['.csv', '.xlsx', '.xls'];
+  let modalEls = null;
+  let selectedFile = null;
+  let triggerEl = null;
+  let sheetJsLoadPromise = null;
+
+  function fileExt(name) {
+    const m = /\.[^.]+$/.exec(name || '');
+    return m ? m[0].toLowerCase() : '';
+  }
+
+  function formatBytes(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+  }
+
+  function buildModal() {
+    if (modalEls) return modalEls;
+
+    const overlay = document.createElement('div');
+    overlay.className = 'rdx-modal-overlay';
+    overlay.id = 'rdxUploadModalOverlay';
+    overlay.innerHTML = `
+      <div class="rdx-modal" role="dialog" aria-modal="true" aria-labelledby="rdxUploadModalTitle">
+        <div class="rdx-modal-topline">
+          <div class="rdx-modal-topline-left">
+            <span class="rdx-modal-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="17 8 12 3 7 8" />
+                <line x1="12" y1="3" x2="12" y2="15" />
+              </svg>
+            </span>
+            <span>
+              <h3 class="rdx-modal-title" id="rdxUploadModalTitle">Upload File</h3>
+              <p class="rdx-modal-subtitle">Max 10.00 MB &middot; .csv, .xlsx, .xls</p>
+            </span>
+          </div>
+          <button type="button" class="rdx-modal-close" id="rdxUploadModalClose" aria-label="Close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="rdx-modal-body">
+          <p class="rdx-modal-hint">Drag and drop your file here, or browse from your computer.</p>
+
+          <div class="rdx-dropzone" id="rdxDropzone" tabindex="0" role="button" aria-label="Browse or drop a file to upload">
+            <div class="rdx-dropzone-icon" id="rdxDropzoneIcon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="17 8 12 3 7 8" />
+                <line x1="12" y1="3" x2="12" y2="15" />
+              </svg>
+            </div>
+            <div class="rdx-dropzone-title" id="rdxDropzoneTitle">Click to browse or drag &amp; drop</div>
+            <div class="rdx-dropzone-sub" id="rdxDropzoneSub">Supported formats: .csv, .xlsx, .xls</div>
+          </div>
+
+          <input type="file" id="rdxModalFileInput" accept=".csv,.xlsx,.xls" hidden />
+        </div>
+
+        <div class="rdx-modal-footer">
+          <button type="button" class="rdx-btn rdx-btn-outline" id="rdxModalCancelBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+            CANCEL
+          </button>
+          <button type="button" class="rdx-btn rdx-btn-primary" id="rdxModalUploadBtn" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
+            UPLOAD
+          </button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+
+    modalEls = {
+      overlay,
+      dropzone: overlay.querySelector('#rdxDropzone'),
+      dzIcon: overlay.querySelector('#rdxDropzoneIcon'),
+      dzTitle: overlay.querySelector('#rdxDropzoneTitle'),
+      dzSub: overlay.querySelector('#rdxDropzoneSub'),
+      fileInput: overlay.querySelector('#rdxModalFileInput'),
+      cancelBtn: overlay.querySelector('#rdxModalCancelBtn'),
+      uploadBtn: overlay.querySelector('#rdxModalUploadBtn'),
+      closeBtn: overlay.querySelector('#rdxUploadModalClose'),
+    };
+
+    wireModalEvents();
+    return modalEls;
+  }
+
+  function wireModalEvents() {
+    const { overlay, dropzone, fileInput, cancelBtn, uploadBtn, closeBtn } = modalEls;
+
+    dropzone.addEventListener('click', () => fileInput.click());
+    dropzone.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); }
+    });
+
+    ['dragenter', 'dragover'].forEach((evt) => {
+      dropzone.addEventListener(evt, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropzone.classList.add('dragover');
+      });
+    });
+    ['dragleave', 'dragend'].forEach((evt) => {
+      dropzone.addEventListener(evt, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropzone.classList.remove('dragover');
+      });
+    });
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropzone.classList.remove('dragover');
+      const file = e.dataTransfer?.files?.[0];
+      if (file) setSelectedFile(file);
+    });
+
+    fileInput.addEventListener('change', () => {
+      const file = fileInput.files?.[0];
+      if (file) setSelectedFile(file);
+      fileInput.value = '';
+    });
+
+    cancelBtn.addEventListener('click', closeModal);
+    closeBtn.addEventListener('click', closeModal);
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && overlay.classList.contains('open')) closeModal();
+    });
+
+    uploadBtn.addEventListener('click', () => {
+      if (!selectedFile || uploadBtn.disabled) return;
+      processSelectedFile(selectedFile);
+    });
+  }
+
+  function resetDropzone() {
+    const { dropzone, dzIcon, dzTitle, dzSub, uploadBtn } = modalEls;
+    dropzone.classList.remove('has-error');
+    dzIcon.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+        <polyline points="17 8 12 3 7 8" />
+        <line x1="12" y1="3" x2="12" y2="15" />
+      </svg>`;
+    dzTitle.textContent = 'Click to browse or drag & drop';
+    dzSub.textContent = 'Supported formats: .csv, .xlsx, .xls';
+    uploadBtn.disabled = true;
+    uploadBtn.classList.remove('is-ready');
+    selectedFile = null;
+  }
+
+  function setSelectedFile(file) {
+    const { dropzone, dzIcon, dzTitle, dzSub, uploadBtn } = modalEls;
+    const ext = fileExt(file.name);
+
+    if (!ACCEPTED.includes(ext)) {
+      dropzone.classList.add('has-error');
+      dzIcon.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+        </svg>`;
+      dzTitle.textContent = 'Unsupported file type';
+      dzSub.textContent = 'Please choose a .csv, .xlsx, or .xls file.';
+      uploadBtn.disabled = true;
+      uploadBtn.classList.remove('is-ready');
+      selectedFile = null;
+      return;
+    }
+
+    if (file.size > MAX_BYTES) {
+      dropzone.classList.add('has-error');
+      dzIcon.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+        </svg>`;
+      dzTitle.textContent = 'File is too large';
+      dzSub.textContent = 'Max file size is 10.00 MB.';
+      uploadBtn.disabled = true;
+      uploadBtn.classList.remove('is-ready');
+      selectedFile = null;
+      return;
+    }
+
+    selectedFile = file;
+    dropzone.classList.remove('has-error');
+    dzIcon.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z" />
+      </svg>`;
+    dzTitle.textContent = file.name;
+    dzSub.textContent = formatBytes(file.size) + ' &middot; click or drop to replace'.replace('&middot;', '·');
+    uploadBtn.disabled = false;
+    uploadBtn.classList.add('is-ready');
+  }
+
+  function openModal(btn) {
+    buildModal();
+    triggerEl = btn || triggerEl;
+    resetDropzone();
+    modalEls.overlay.classList.add('open');
+    document.body.classList.add('rdx-modal-locked');
+  }
+
+  function closeModal() {
+    if (!modalEls) return;
+    modalEls.overlay.classList.remove('open');
+    document.body.classList.remove('rdx-modal-locked');
+    resetDropzone();
+  }
+
+  function loadSheetJs() {
+    if (window.XLSX) return Promise.resolve();
+    if (sheetJsLoadPromise) return sheetJsLoadPromise;
+    sheetJsLoadPromise = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+      script.onload = () => resolve();
+      script.onerror = () => reject(new Error('Could not load spreadsheet engine.'));
+      document.head.appendChild(script);
+    });
+    return sheetJsLoadPromise;
+  }
+
+  function finishUpload(text, fileName) {
+    const parsed = rdxParseCSV(text);
+    if (!parsed.length) {
+      rdxShowToast('The selected file appears to be empty.', 'error');
+      return;
+    }
+    const table = rdxGetActiveReportTable(triggerEl);
+    rdxRenderReportRows(table, parsed.slice(1));
+    localStorage.setItem(rdxGetReportStorageKey(), text);
+    rdxShowToast('"' + fileName + '" uploaded and report updated.');
+    closeModal();
+  }
+
+  function processSelectedFile(file) {
+    const { uploadBtn } = modalEls;
+    const ext = fileExt(file.name);
+    uploadBtn.classList.add('is-loading');
+    uploadBtn.disabled = true;
+
+    if (ext === '.csv') {
+      const reader = new FileReader();
+      reader.onload = () => {
+        uploadBtn.classList.remove('is-loading');
+        finishUpload(String(reader.result || ''), file.name);
+      };
+      reader.onerror = () => {
+        uploadBtn.classList.remove('is-loading');
+        uploadBtn.disabled = false;
+        rdxShowToast('Could not read the selected file.', 'error');
+      };
+      reader.readAsText(file);
+      return;
+    }
+
+    // .xlsx / .xls
+    loadSheetJs()
+      .then(() => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          try {
+            const data = new Uint8Array(reader.result);
+            const workbook = window.XLSX.read(data, { type: 'array' });
+            const firstSheetName = workbook.SheetNames[0];
+            const csv = window.XLSX.utils.sheet_to_csv(workbook.Sheets[firstSheetName]);
+            uploadBtn.classList.remove('is-loading');
+            finishUpload(csv, file.name);
+          } catch (err) {
+            uploadBtn.classList.remove('is-loading');
+            uploadBtn.disabled = false;
+            rdxShowToast('Could not parse the selected file.', 'error');
+          }
+        };
+        reader.onerror = () => {
+          uploadBtn.classList.remove('is-loading');
+          uploadBtn.disabled = false;
+          rdxShowToast('Could not read the selected file.', 'error');
+        };
+        reader.readAsArrayBuffer(file);
+      })
+      .catch(() => {
+        uploadBtn.classList.remove('is-loading');
+        uploadBtn.disabled = false;
+        rdxShowToast('Could not load the spreadsheet engine. Please try a .csv file.', 'error');
+      });
+  }
+
+  window.rdxOpenUploadModal = openModal;
+})();
