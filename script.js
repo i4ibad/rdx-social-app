@@ -110,6 +110,102 @@ document.addEventListener("click", (e) => {
 });
 
 setupDropdown("timeframeDropdown", "timeframeBtn", "timeframeMenu", null, "timeframeLabel");
+
+// ==================== TIMEFRAME = FIRST COLUMN FILTER 
+
+(function rdxInitTimeframeColumnFilter() {
+  const menu = document.getElementById("timeframeMenu");
+  const btn = document.getElementById("timeframeBtn");
+  const label = document.getElementById("timeframeLabel");
+  if (!menu || !btn) return;
+
+  const tables = Array.from(document.querySelectorAll(".content-card table"));
+  if (!tables.length) return; 
+
+  const DEFAULT_LABEL = "Time Frame";
+  const ALL_VALUE = "__rdx_all__";
+
+  function getFirstColumnValue(row) {
+    return (row.children[0] ? row.children[0].textContent : "").replace(/\s+/g, " ").trim();
+  }
+
+  function collectColumnValues() {
+    const seen = new Set();
+    const values = [];
+    tables.forEach((table) => {
+      table.querySelectorAll("tbody tr").forEach((row) => {
+        const value = getFirstColumnValue(row);
+        if (value && !seen.has(value)) {
+          seen.add(value);
+          values.push(value);
+        }
+      });
+    });
+    return values;
+  }
+
+  function buildMenu() {
+    const values = collectColumnValues();
+    menu.innerHTML = "";
+
+    const allItem = document.createElement("div");
+    allItem.className = "dropdown-item";
+    allItem.dataset.value = ALL_VALUE;
+    allItem.textContent = "All";
+    menu.appendChild(allItem);
+
+    values.forEach((value) => {
+      const item = document.createElement("div");
+      item.className = "dropdown-item";
+      item.dataset.value = value;
+      item.textContent = value;
+      menu.appendChild(item);
+    });
+
+    menu.querySelectorAll(":scope > .dropdown-item").forEach((item) => {
+      item.addEventListener("click", (e) => {
+        e.stopPropagation();
+        selectValue(item.dataset.value);
+        menu.classList.remove("open");
+      });
+    });
+  }
+
+  function applyFilterToTable(table, value) {
+    const rows = Array.from(table.querySelectorAll("tbody tr"));
+    let visibleCount = 0;
+    rows.forEach((row) => {
+      const match = value === ALL_VALUE || !value || getFirstColumnValue(row) === value;
+      row.style.display = match ? "" : "none";
+      if (match) visibleCount++;
+    });
+
+    const card = table.closest(".content-card");
+    const pageInfo = card ? card.querySelector(".page-info") : null;
+    if (pageInfo) {
+      const total = rows.length;
+      pageInfo.textContent = visibleCount ? `1–${visibleCount} of ${visibleCount}` : `0–0 of ${total}`;
+    }
+  }
+
+  function selectValue(value) {
+    if (label) label.textContent = value === ALL_VALUE ? DEFAULT_LABEL : value;
+    tables.forEach((table) => applyFilterToTable(table, value));
+  }
+
+  buildMenu();
+
+  // Re-run whenever a table's rows get re-rendered (e.g. after a CSV upload
+  // or a "Load report" action) so the current selection keeps working and
+  // any newly-loaded values are available in the dropdown.
+  window.rdxTableHelpers = window.rdxTableHelpers || {};
+  window.rdxTableHelpers.refreshTimeframeFilter = function () {
+    const current = label && label.textContent !== DEFAULT_LABEL ? label.textContent : ALL_VALUE;
+    buildMenu();
+    selectValue(current);
+  };
+})();
+
 setupDropdown("densityDropdown", "densityBtn", "densityMenu", (value) => {
   state.density = value;
   applyDensity(value);
@@ -394,6 +490,7 @@ function rdxRenderReportRows(table, dataRows) {
   }
 
   window.rdxTableHelpers?.applyVisibility?.();
+  window.rdxTableHelpers?.refreshTimeframeFilter?.();
   applyDensity(state.density);
 }
 
@@ -408,7 +505,7 @@ function rdxSetButtonLoading(btn, isLoading) {
   btn.disabled = isLoading;
 }
 
-// ---- REFRESH REPORT: re-syncs the table with the last saved report
+// REFRESH REPORT
 function rdxRefreshReport(btn) {
   const table = rdxGetActiveReportTable(btn);
   const card = table?.closest('.content-card');
@@ -431,7 +528,7 @@ function rdxRefreshReport(btn) {
   }, 400);
 }
 
-// ---- LOAD REPORT ----
+// LOAD REPORT
 function rdxLoadReport(btn) {
   const table = rdxGetActiveReportTable(btn);
   const key = rdxGetReportStorageKey();
@@ -451,7 +548,7 @@ function rdxLoadReport(btn) {
   }, 300);
 }
 
-// ---- UPLOAD FILE
+// UPLOAD FILE
 function rdxTriggerUpload(btn) {
   if (window.rdxOpenUploadModal) {
     window.rdxOpenUploadModal(btn);
@@ -506,9 +603,9 @@ document.addEventListener('change', (e) => {
   if (!e.target.matches('#uploadFileInput')) return;
   rdxHandleUploadedFile(e.target);
 });
-// ==================== UPLOAD FILE MODAL ====================
+// UPLOAD FILE MODAL
 (function () {
-  const MAX_BYTES = 10 * 1024 * 1024; // 10.00 MB
+  const MAX_BYTES = 10 * 1024 * 1024;
   const ACCEPTED = ['.csv', '.xlsx', '.xls'];
   let modalEls = null;
   let selectedFile = null;
