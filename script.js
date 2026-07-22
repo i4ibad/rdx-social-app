@@ -195,9 +195,7 @@ setupDropdown("timeframeDropdown", "timeframeBtn", "timeframeMenu", null, "timef
 
   buildMenu();
 
-  // Re-run whenever a table's rows get re-rendered (e.g. after a CSV upload
-  // or a "Load report" action) so the current selection keeps working and
-  // any newly-loaded values are available in the dropdown.
+  // Re-run whenever a table's rows get re-rendered
   window.rdxTableHelpers = window.rdxTableHelpers || {};
   window.rdxTableHelpers.refreshTimeframeFilter = function () {
     const current = label && label.textContent !== DEFAULT_LABEL ? label.textContent : ALL_VALUE;
@@ -216,7 +214,7 @@ setupDropdown("rowsDropdown", "rowsBtn", "rowsMenu", (value) => {
   renderTable();
 }, "rowsLabel");
 
-// ==================== DENSITY HANDLER ====================
+//  DENSITY HANDLER
 function applyDensity(density) {
   const tables = document.querySelectorAll("table");
   const contentCards = document.querySelectorAll(".content-card");
@@ -245,7 +243,7 @@ window.addEventListener("load", () => {
   applyDensity(state.density);
 });
 
-// ==================== PAGINATION ====================
+// PAGINATION 
 document.getElementById("prevPage")?.addEventListener("click", () => {
   if (state.page > 0) { state.page--; renderTable(); }
 });
@@ -256,7 +254,7 @@ document.getElementById("nextPage")?.addEventListener("click", () => {
   if (state.page < maxPage) { state.page++; renderTable(); }
 });
 
-// ==================== DARK MODE + LOGO ====================
+//  DARK MODE + LOGO 
 const lightLogoSrc = "images/logo.svg";
 const darkLogoSrc = "images/darklogo.svg";
 
